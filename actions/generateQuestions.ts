@@ -2,8 +2,7 @@ import { OpenAI } from "openai";
 
 const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
-  apiKey:
-    "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",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export const generateQuestions = async (
