@@ -45,7 +45,7 @@ export default function CheckoutPage() {
         }),
       });
 
-      console.log(response.body);
+      console.log(response);
 
       return "";
 

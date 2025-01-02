@@ -5,6 +5,7 @@ import {
   OrdersController,
   PaymentsController,
 } from "@paypal/paypal-server-sdk";
+import { OrderRequest } from "@paypal/paypal-server-sdk/dist/types/models/orderRequest";
 
 export class PaypalService {
   private readonly _ordersController: OrdersController;
@@ -36,6 +37,27 @@ export class PaypalService {
     this._ordersController = new OrdersController(client);
     this._paymentsController = new PaymentsController(client);
   }
+
+  public createOrder = async (): Promise<string> => {
+    const response = await this._ordersController.ordersCreate({
+      body: {
+        intent: "CAPTURE",
+        purchaseUnits: [
+          {
+            amount: {
+              currencyCode: "USD",
+              value: "100",
+            },
+          },
+        ],
+      } as OrderRequest,
+      prefer: "return=minimal",
+    });
+
+    const responseObject = JSON.parse(response.body as string);
+
+    return responseObject.id;
+  };
 
   public get ordersController(): OrdersController {
     return this._ordersController;

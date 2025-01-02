@@ -6,29 +6,33 @@ import { OrderRequest } from "@paypal/paypal-server-sdk/dist/types/models/orderR
 export async function POST(req: NextRequest) {
   const paypalService = new PaypalService();
 
-  try {
-    const { body, ...httpResponse } =
-      await paypalService.ordersController.ordersCreate({
-        body: {
-          intent: "CAPTURE",
-          purchaseUnits: [
-            {
-              amount: {
-                currencyCode: "USD",
-                value: "100",
-              },
-            },
-          ],
-        } as OrderRequest,
-        prefer: "return=minimal",
-      });
+  paypalService.createOrder().then((orderId) => {
+    return new NextResponse(orderId);
+  });
 
-    return new NextResponse(JSON.parse(body as string), {
-      status: httpResponse.statusCode,
-    });
-  } catch (err) {
-    if (err instanceof ApiError) {
-      throw new Error(err.message);
-    }
-  }
+  // try {
+  //   const { body, ...httpResponse } =
+  //     await paypalService.ordersController.ordersCreate({
+  //       body: {
+  //         intent: "CAPTURE",
+  //         purchaseUnits: [
+  //           {
+  //             amount: {
+  //               currencyCode: "USD",
+  //               value: "100",
+  //             },
+  //           },
+  //         ],
+  //       } as OrderRequest,
+  //       prefer: "return=minimal",
+  //     });
+  //
+  //   return new NextResponse(JSON.parse(body as string), {
+  //     status: httpResponse.statusCode,
+  //   });
+  // } catch (err) {
+  //   if (err instanceof ApiError) {
+  //     throw new Error(err.message);
+  //   }
+  // }
 }
